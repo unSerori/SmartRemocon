@@ -15,7 +15,7 @@
 import express from 'express'; // Expressライブラリをインポート（Node.jsのWebアプリケーションフレームワーク）
 import http from 'http'; // httpモジュールをインポート（Node.jsの標準モジュール、HTTPサーバーを作成するために使用）
 
-import { routing } from './route/router1.js';
+import { routing } from './route/router.js';
 
 // expressアプリケーションのインスタンスを作成
 const app = express();

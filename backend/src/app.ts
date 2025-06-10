@@ -12,14 +12,10 @@
  *  Author :
  */
 
-// Expressライブラリをインポート（Node.jsのWebアプリケーションフレームワーク）
-import express from 'express';
+import express from 'express'; // Expressライブラリをインポート（Node.jsのWebアプリケーションフレームワーク）
+import http from 'http'; // httpモジュールをインポート（Node.jsの標準モジュール、HTTPサーバーを作成するために使用）
 
-// httpモジュールをインポート（Node.jsの標準モジュール、HTTPサーバーを作成するために使用）
-import http from 'http';
-import { routing1 } from './route/router1.js';
-
-// import
+import { routing } from './route/router1.js';
 
 // expressアプリケーションのインスタンスを作成
 const app = express();
@@ -28,18 +24,16 @@ const app = express();
 const server = http.createServer(app);
 
 // 受信するリクエストのボディをJSONとして自動的に解析するミドルウェアを追加
-// app.use(express.json());
+app.use(express.json());
 
 // サーバーがリッスンするポート番号を指定
 const port = 8000;
 
-console.log('aaaa');
-
-routing1(3);
+routing(app);
 
 // 指定したポートでHTTPサーバーを起動し、起動成功時にメッセージを出力
-// server.listen(port, () => {
-//   console.log(`Server is running on port ${port}`);
-// });
+server.listen(port, () => {
+  console.log(`Server is running on port ${port}`);
+});
 
 // websocket

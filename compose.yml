@@ -32,11 +32,12 @@ services:
     depends_on:
       - database
       - mosquitto
-    command: >
-      sh -c "
-        npm install &&
-        npm run dev
-      "
+    tty: true
+    # command: >
+    #   sh -c "
+    #     npm install &&
+    #     npm run dev
+    #   "
 
   mosquitto:
     image: eclipse-mosquitto

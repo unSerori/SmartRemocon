@@ -8,6 +8,7 @@ services:
     depends_on:
       - frontend
       - backend
+    tty: true
 
   frontend:
     image: node:22-alpine

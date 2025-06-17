@@ -1,0 +1,10 @@
+{
+  "extends": "../tsconfig.json", 
+  "compilerOptions": {
+    "noEmit": true // E2Eテストでは通常、ビルドファイルは不要なので出力しない
+  },
+  "include": [
+    "../src/**/*.ts", // アプリ本体の型情報は読み込む
+    "./**/*.ts"       // testフォルダ内のすべての.tsファイルを対象にする
+  ]
+}

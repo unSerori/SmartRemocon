@@ -29,7 +29,7 @@ services:
     volumes:
       - ./backend:/app
     ports:
-      - "3000:3000" # 個人での開発なため、ハードコードしている
+      - "0720:3000" # 個人での開発なため、ハードコードしている
     depends_on:
       - database
       - mosquitto

@@ -10,7 +10,8 @@ export default tseslint.config([
 
   // プロジェクト全体ルール
   {
-    files: ['**/*.{js,mjs,cjs,ts,mts,cts}'], // 対象
+    files: ['**/*.{ts,mts,cts}'], // 対象
+
     languageOptions: {
       ecmaVersion: 'latest',
       sourceType: 'module',

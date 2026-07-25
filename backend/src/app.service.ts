@@ -1,21 +1,25 @@
-import { Injectable, Req, Body } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { PostEnvDTO } from './dto/req';
+import { EnvLogRepo } from './env-log.repository';
+import { EnvLog, Prisma } from './generated/prisma/client';
 
-export type EnvLog = {
-  id: number;
-  // device: Device;
-  temperatureSht: number;
-  humidity: number;
-  temperatureQmp: number;
-  pressure: number;
-  createdAt: Date;
-  updatedAt: Date;
-};
+// export type EnvLog = {
+//   id: number;
+//   // device: Device;
+//   temperatureSht: number;
+//   humidity: number;
+//   temperatureQmp: number;
+//   pressure: number;
+//   createdAt: Date;
+//   updatedAt: Date;
+// };
 
-const testDataList: EnvLog[] = [];
+// const testDataList: EnvLog[] = [];
 
 @Injectable()
 export class AppService {
+  constructor(private readonly EnvLogRepo: EnvLogRepo) {}
+
   getHello(): string {
     return 'Hello World!';
   }
@@ -25,31 +29,53 @@ export class AppService {
     return 'Good By;;';
   }
 
-  getEnv(reqEnvData: PostEnvDTO): EnvLog {
+  async createEnvLog(reqEnvData: PostEnvDTO): Promise<EnvLog> {
     console.log('reqEnvData: ', reqEnvData);
-
     console.log('reqEnvData.temperatureSht: ', reqEnvData.temperatureSht);
 
-    const testData: EnvLog = {
-      id: testDataList.length,
-      // device: Device;
+    // const envlog: EnvLog = {
+    //   id: testDataList.length,
+    //   // device: Device;
+    //   temperatureSht: reqEnvData.temperatureSht,
+    //   humidity: reqEnvData.humidity,
+    //   temperatureQmp: reqEnvData.temperatureQmp,
+    //   pressure: reqEnvData.pressure,
+    //   createdAt: new Date(),
+    //   updatedAt: new Date(),
+    // };
+
+    // const createData: Prisma.EnvLogsCreateInput = {
+    //   temperatureSht: reqEnvData.temperatureSht,
+    //   humidity: reqEnvData.humidity,
+    //   temperatureQmp: reqEnvData.temperatureQmp,
+    //   pressure: reqEnvData.pressure,
+    //   createdAt: new Date(),
+    //   updatedAt: new Date(),
+    // };
+
+    const createData: Prisma.EnvLogCreateInput = {
+      deviceId: 1, // TODO: ここはauto_incにすべきか、uuidにすべきか。deviceはauto_incでいいかも。
       temperatureSht: reqEnvData.temperatureSht,
       humidity: reqEnvData.humidity,
       temperatureQmp: reqEnvData.temperatureQmp,
       pressure: reqEnvData.pressure,
-      createdAt: new Date(),
-      updatedAt: new Date(),
     };
 
-    testDataList.push(testData);
+    // testDataList.push(testData);
+    // TODO: ここでリポジトリ層の登録処理を呼ぶぜ！！！
+    const saveLog = await this.EnvLogRepo.add(createData);
+    console.log('Saved to DB: ', saveLog);
 
-    console.log('testDataList: ', testDataList);
+    // console.log('testDataList: ', testDataList);
 
-    return testData;
+    return saveLog;
   }
 
-  getEnvLogs(): EnvLog[] {
-    console.log('testData: ', testDataList);
-    return testDataList;
+  async fetchEnvLogs(limit?: number): Promise<EnvLog[]> {
+    // 型がわからん
+    // console.log('testData: ', testDataList);
+    const envLogs = await this.EnvLogRepo.list(limit); // ?: repo層が返す型の確定 // ?: getにはlimitを渡すべきか？このあと返り血をlimitで削減するか？
+
+    return envLogs;
   }
 }

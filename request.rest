@@ -2,10 +2,10 @@
 
 // 基本
 @protocol = http
-@hostname = localhost
-@port = 8080
+@hostname = backend
+@port = 3000
 @host = {{hostname}}:{{port}}
-@baseUrl = {{protocol}}://{{host}}/api
+@baseUrl = {{protocol}}://{{host}}
 @apiV = /v1
 @createdAt = {{$datetime iso8601}}
 @modifiedBy = {{$processEnv USERNAME}}
@@ -16,6 +16,18 @@
 @hoge_uuid = 1db31e56-5b62-4c98-b951-997e49b401e1
 
 // Requests
+
+// envデータ取得
+GET {{baseUrl}}/env-logs HTTP/1.1
+
+###
+
+
+// envデータ取得（limit付き）
+GET {{baseUrl}}/env-logs?limit=7 HTTP/1.1
+
+###
+
 
 // envデータ送信（MQTTに置き換わる予定）
 POST {{baseUrl}}/env HTTP/1.1

@@ -16,7 +16,7 @@ services:
     volumes:
       - ./frontend:/app
     ports:
-      - "5173:5173"
+      - "${FRONT_PORT:-5173}:5173"
     command: >
       sh -c "
         npm install &&
@@ -34,10 +34,14 @@ services:
     depends_on:
       - database
       - mosquitto
-    env_file:
-      - "./backend/.env"
+    environment:
+      DB_HOST: ${DB_HOST}
+      DB_USER: ${MYSQL_USER}
+      DB_PASSWORD: ${MYSQL_PASSWORD}
+      DB_NAME: ${MYSQL_DATABASE}
+
     ports:
-      - "${PORT:-3000}:3000"
+      - "${BACK_PORT:-3000}:3000"
       - "${DEBUG_PORT:-9229}:9229"
     volumes:
       - "./backend:/app"

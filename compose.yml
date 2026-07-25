@@ -24,25 +24,49 @@ services:
       "
 
   backend:
-    image: node:22-alpine
-    working_dir: /app
-    volumes:
-      - ./backend:/app
-    ports:
-      - "0720:3000" # 個人での開発なため、ハードコードしている
+    build:
+      context: "./backend/"
+      dockerfile: Dockerfile
+      args:
+        HOST_UID: '${HOST_UID:?"HOST_UID is required. Please run: HOST_UID=$(id -u) HOST_GID=$(id -g) docker compose up -d --build"}'
+        HOST_GID: '${HOST_GID:?"HOST_GID is required. Please run: HOST_UID=$(id -u) HOST_GID=$(id -g) docker compose up -d --build"}'
+      target: development
     depends_on:
       - database
       - mosquitto
-    command: >
-      sh -c "
-        npm install &&
-        npm run start:dev
-      "
-    # command: >
-    #   sh -c "
-    #     npm install &&
-    #     npm run dev
-    #   "
+    env_file:
+      - "./backend/.env"
+    ports:
+      - "${PORT:-3000}:3000"
+      - "${DEBUG_PORT:-9229}:9229"
+    volumes:
+      - "./backend:/app"
+      - "backend-node_modules:/app/node_modules"
+      - "backend-npm-cache:/home/app/.cache/npm"
+    # networks: [dev-net]
+
+  # backend:
+  #   image: node:22-alpine
+  #   working_dir: /app
+  #   volumes:
+  #     - ./backend:/app
+  #   ports:
+  #     - "0720:3000" # 個人での開発なため、ハードコードしている
+  #   depends_on:
+  #     - database
+  #     - mosquitto
+  #   command: >
+  #     sh -c "
+  #       npm install &&
+  #       npm run start:dev
+  #     "
+  #   env_file:
+  #     - "./backend/.env"
+  #   # command: >
+  #   #   sh -c "
+  #   #     npm install &&
+  #   #     npm run dev
+  #   #   "
 
   mosquitto:
     image: eclipse-mosquitto
@@ -56,13 +80,17 @@ services:
   database:
     image: mysql:8.4
     command: mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+    ports:
+      - "3306:3306"
     environment:
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: database
-      MYSQL_USER: user
-      MYSQL_PASSWORD: password
-    # volumes:
-    #   - mysql-data:/var/lib/mysql
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    volumes:
+      - mysql-data:/var/lib/mysql
 
-# volumes:
-#   mysql-data:
+volumes:
+  mysql-data:
+  backend-node_modules:
+  backend-npm-cache:

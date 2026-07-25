@@ -1,0 +1,24 @@
+services:
+  devcontainer:
+    build:
+      context: ./.devcontainer/fullstack
+      dockerfile: Dockerfile
+      args:
+        HOST_UID: '${HOST_UID:?"HOST_UID is required. Please run: HOST_UID=$(id -u) HOST_GID=$(id -g) docker compose up -d --build"}'
+        HOST_GID: '${HOST_GID:?"HOST_GID is required. Please run: HOST_UID=$(id -u) HOST_GID=$(id -g) docker compose up -d --build"}'
+    stdin_open: true
+    tty: true
+    volumes:
+      - "./:/workspaces"
+      - "vscode-server:/home/app/.vscode-server"
+      # 以下、各種コンテナで利用する名前付きボリュームをdevcontainer srv側に共有
+      - "backend-node_modules:/workspaces/backend/node_modules"
+      - "backend-npm-cache:/home/app/.cache/npm"
+    cap_add:
+      - SYS_PTRACE
+    security_opt:
+      - seccomp:unconfined
+    # networks: [dev-net]
+
+volumes:
+  vscode-server:

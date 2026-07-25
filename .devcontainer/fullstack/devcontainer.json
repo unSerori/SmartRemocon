@@ -1,0 +1,69 @@
+{
+    // スキーマ
+    "$schema": "https://raw.githubusercontent.com/devcontainers/spec/main/schemas/devContainer.schema.json",
+    // 設定
+    "name": "Fullstack Dev",
+    "dockerComposeFile": [
+        "../../compose.yml",
+        "./compose.devcontainer.yaml"
+    ],
+    "service": "devcontainer",
+    "shutdownAction": "none",
+    "workspaceFolder": "/workspaces",
+    // 追加設定
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                // 共通
+                "artdiniz.quitcontrol-vscode", // cmd + qで終了させない
+                "christian-kohler.path-intellisense", // パス補完
+                "usernamehw.errorlens", // エラーをインライン。
+                "waderyan.gitblame", // 変更履歴をインライン。
+                "bierner.markdown-mermaid", // マーメイド。
+                "bpruitt-goddard.mermaid-markdown-syntax-highlighting", // マーメイドをハイライト。
+                "davidanson.vscode-markdownlint", // Markdownのリンタ。
+                "yzane.markdown-pdf", // MarkdownをPDF表示。
+                "yzhang.markdown-all-in-one", // マークダウン。
+                "redhat.vscode-yaml", // Yaml
+                "tamasfe.even-better-toml", // Toml
+                "mikestead.dotenv", // envファイルのシンタックスハイライト
+                "ms-azuretools.vscode-docker", // Docker
+                "humao.rest-client", // httpの簡易テスト。
+                // frontend
+                "esbenp.prettier-vscode", // フォーマッタ。
+                "dbaeumer.vscode-eslint", // リンタ。
+                "bradlc.vscode-tailwindcss", // Tailwind補完。
+                "formulahendry.auto-rename-tag", // JSX。
+                "vincaslt.highlight-matching-tag", // タグ対応表示。
+                "dsznajder.es7-react-js-snippets", // スニペット。
+                "rodrigovallades.es7-react-js-snippets",
+                "wix.vscode-import-cost", // バンドルサイズの確認。
+                // backend
+                "esbenp.prettier-vscode", // フォーマッタ。
+                "dbaeumer.vscode-eslint", // リンタ。
+                "prisma.prisma" // prisma
+            ]
+        }
+    },
+    "remoteEnv": {
+        "LOCAL_WORKSPACE_FOLDER": "${localWorkspaceFolder}"
+    },
+    "remoteUser": "app",
+    // ライフサイクルスクリプト
+    // "postCreateCommand": "",
+    // ツール
+    "features": {
+        // ツールセット
+        "ghcr.io/devcontainers/features/common-utils:2": {},
+        "ghcr.io/devcontainers-extra/features/apt-packages": {
+            "packages": "iputils-ping"
+        },
+        "ghcr.io/devcontainers/features/github-cli:1": {},
+        // DooD, インフラ・クラウド系CLIなど。
+        "ghcr.io/devcontainers/features/docker-outside-of-docker:1": {},
+        // LSPが依存する実行環境たち。
+        "ghcr.io/devcontainers/features/node:1": {
+            "version": "lts"
+        }
+    }
+}

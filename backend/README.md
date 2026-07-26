@@ -106,8 +106,16 @@ Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
 npm: backendコンテナ内。
 
 ```bash
-npm i -g @nestjs/cli
+# pj作成
+npm i -D @nestjs/cli
 nest new .
+npm i class-validator class-transformer dotenv
+# dotenvではなく@nestjs/configの`ConfigService`を使うのもアリ
+# その場合、`npm i`で`dotenv`の代わりに`@nestjs/config`をインストール
+
+# prisma導入
+npm install @prisma/client @prisma/adapter-mariadb
+npm install -D prisma
 
 # .envとprisma/schema.prisma作成
 npx prisma init

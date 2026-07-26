@@ -63,7 +63,7 @@
         "ghcr.io/devcontainers/features/docker-outside-of-docker:1": {},
         // LSPが依存する実行環境たち。
         "ghcr.io/devcontainers/features/node:1": {
-            "version": "lts"
+            "version": "22"
         }
     }
 }

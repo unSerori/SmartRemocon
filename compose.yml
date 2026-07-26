@@ -39,7 +39,6 @@ services:
       DB_USER: ${MYSQL_USER}
       DB_PASSWORD: ${MYSQL_PASSWORD}
       DB_NAME: ${MYSQL_DATABASE}
-
     ports:
       - "${BACK_PORT:-3000}:3000"
       - "${DEBUG_PORT:-9229}:9229"

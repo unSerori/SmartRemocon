@@ -62,7 +62,7 @@ ENV NODE_ENV=development
 ENV npm_config_cache=/home/app/.cache/npm
 RUN mkdir -p "${npm_config_cache}"
 
-COPY --chown=${HOST_UID}:${HOST_GID} package*.json ./
+COPY --chown=${HOST_UID}:${HOST_GID} package*.json .npmrc ./
 RUN npm ci
 
 # 9229: Inspector Protocol

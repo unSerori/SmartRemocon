@@ -21,6 +21,8 @@
   <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
   [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
 
+# backend
+
 ## Description
 
 [Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
@@ -96,3 +98,72 @@ Nest is an MIT-licensed open source project. It can grow thanks to the sponsors 
 ## License
 
 Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+
+---
+
+## 最初のライブラリ導入手順メモ
+
+npm: backendコンテナ内。
+
+```bash
+npm i -g @nestjs/cli
+nest new .
+
+# .envとprisma/schema.prisma作成
+npx prisma init
+```
+
+## 開発環境起動
+
+```bash
+# 立ち上げ
+docker compose up --build -d
+```
+
+あるいはDevContainerで起動。
+
+## 開発時のアクション
+
+NestJS: backendコンテナ内。
+
+```bash
+# 開発サーバ起動（ホットリロード）
+npm run start:dev
+
+# アグリゲート追加時にリソース一式を生成
+nest g resource <name>
+
+# 個別生成
+nest g module <name>
+nest g controller <name>
+nest g service <name>
+nest g guard <name> # リクエストして良いかの確認。
+nest g interceptor <name> # controller前後の処理。
+nest g pipe <name> # controller直前の値チェック。
+
+# ビルド
+npm run build
+
+# テスト実行
+npm run test
+```
+
+Prisma: backendコンテナ内。
+
+```bash
+# DBの中身をブラウザで閲覧・編集。
+npx prisma studio
+
+# モデル更新後
+npx prisma migrate dev --name <マイグレーション履歴名> # SQLの再生成とローカルDBへの変更反映。
+npx prisma generate # ts clientを再生成して型を最適化。
+
+# スキーマの構文チェックだけする。
+npx prisma validate
+
+# スキーマをフォーマット
+npx prisma format
+
+# マイグレーション履歴をリセット（DB全削除->再適用）
+npx prisma migrate reset
+```

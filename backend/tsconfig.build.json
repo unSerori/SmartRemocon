@@ -2,7 +2,8 @@
   "extends": "./tsconfig.json",
   "compilerOptions": {
     "rootDir": "./src/",
-    "noEmit": false
+    "noEmit": false,
+    "tsBuildInfoFile": "./dist/tsconfig.build.tsbuildinfo" // `<outDir>/<rootDir>からconfigまでの相対パス/<config名>.tsbuildinfo`になって、`"deleteOutDir": true,`の対象から外れてしまうため、明示的にdistの中に指定
   },
   "exclude": [
     "node_modules",

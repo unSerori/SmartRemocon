@@ -163,7 +163,7 @@ Prisma: backendコンテナ内。
 npx prisma studio
 
 # モデル更新後
-npx prisma migrate dev --name <マイグレーション履歴名> # SQLの再生成とローカルDBへの変更反映。
+npx prisma migrate dev --name <マイグレーション履歴名> # SQLの再生成とローカルDBへの変更反映。（add, change, remove,,,）
 npx prisma generate # ts clientを再生成して型を最適化。
 
 # スキーマの構文チェックだけする。
@@ -174,4 +174,14 @@ npx prisma format
 
 # マイグレーション履歴をリセット（DB全削除->再適用）
 npx prisma migrate reset
+```
+
+MySQL: databaseコンテナ内。
+
+```bash
+# ログイン
+mysql -u root -p${MYSQL_ROOT_PASSWORD}
+
+# 権限付与
+GRANT ALL PRIVILEGES ON *.* TO '${MYSQL_USER}'@'%';
 ```

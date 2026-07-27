@@ -22,7 +22,6 @@ GET {{baseUrl}}/env-logs HTTP/1.1
 
 ###
 
-
 // envデータ取得（limit付き）
 GET {{baseUrl}}/env-logs?limit=7 HTTP/1.1
 

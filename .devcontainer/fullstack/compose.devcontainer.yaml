@@ -8,6 +8,13 @@ services:
         HOST_GID: '${HOST_GID:?"HOST_GID is required. Please run: HOST_UID=$(id -u) HOST_GID=$(id -g) docker compose up -d --build"}'
     stdin_open: true
     tty: true
+    env_file:
+      - ".env"
+    environment:
+      DB_HOST: ${DB_HOST}
+      DB_USER: ${MYSQL_USER}
+      DB_PASSWORD: ${MYSQL_PASSWORD}
+      DB_NAME: ${MYSQL_DATABASE}
     volumes:
       - "./:/workspaces"
       - "vscode-server:/home/app/.vscode-server"

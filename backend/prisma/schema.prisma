@@ -16,6 +16,7 @@ datasource db {
 
 model EnvLog {
   id             Int      @id @default(autoincrement()) // 環境ログID
+  // device Device @relation(fields: [deviceId], references: [id])
   deviceId       Int      @map("device_id") // デバイスとの関連  // TODO: FR devices(id)
   temperatureSht Float    @map("temperature_sht") // 温度（SHTセンサー由来）
   humidity       Float // 湿度
@@ -29,7 +30,6 @@ model EnvLog {
 
 model Device {
   id Int @id @default(autoincrement()) // デバイスの一意ID（主キー）
-  irSensorValue IrSensorValue[] // 複数の操作値を持つ
   macAddress String @unique @map("mac_address") // MACアドレス（ユニーク）
   ipAddress String @map("ip_address") // IPアドレス
   name String // デバイス名
@@ -38,6 +38,9 @@ model Device {
   registerdAt DateTime @map("registerd_at")  @db.Timestamp(3) // デバイスが登録された日時
   createdAt      DateTime @default(now()) @map("created_at") @db.Timestamp(3) // レコード作成日時
   updatedAt      DateTime @updatedAt @map("updated_at")  @db.Timestamp(3) // レコード更新日時
+
+  irSensorValue IrSensorValue[] // 複数の操作値を持つ
+  // envLog EnvLog[]
 
   @@map("devices")
 }

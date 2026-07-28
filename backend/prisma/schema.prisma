@@ -26,3 +26,32 @@ model EnvLog {
 
   @@map("env_logs")
 }
+
+model Device {
+  id Int @id @default(autoincrement()) // デバイスの一意ID（主キー）
+  irSensorValue IrSensorValue[] // 複数の操作値を持つ
+  macAddress String @unique @map("mac_address") // MACアドレス（ユニーク）
+  ipAddress String @map("ip_address") // IPアドレス
+  name String // デバイス名
+  location String? @db.Text // 設置場所（省略可能）
+  collectMetrics Boolean @map("collect_matrics") @default(false) // 環境情報を収集するかどうか
+  registerdAt DateTime @map("registerd_at")  @db.Timestamp(3) // デバイスが登録された日時
+  createdAt      DateTime @default(now()) @map("created_at") @db.Timestamp(3) // レコード作成日時
+  updatedAt      DateTime @updatedAt @map("updated_at")  @db.Timestamp(3) // レコード更新日時
+
+  @@map("devices")
+}
+
+model IrSensorValue {
+  id Int @id @default(autoincrement()) // センサーデータID（主キー）
+  device Device @relation(fields: [deviceId], references: [id])
+  deviceId Int // デバイスとの関連
+  name String // 信号名（例：TV電源など）
+  data String @db.Text // 赤外線信号データ
+  createdAt      DateTime @default(now()) @map("created_at") @db.Timestamp(3) // レコード作成日時
+  updatedAt      DateTime @updatedAt @map("updated_at")  @db.Timestamp(3) // レコード更新日時
+
+  @@map("ir_sensor_values")
+}
+
+

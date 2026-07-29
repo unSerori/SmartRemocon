@@ -1,0 +1,24 @@
+// Web側とデバイス側を別々のウィンドウで開発する。
+// その際、デバイス開発時にも.gitにアクセスするために、ウィンドウにpj rootを読み込ませるためのworkspace。
+// そのため、Web側の開発では、Reopen in Containerするので使わない。
+
+// device開発をしたい場合の利用方法 -> pj rootを開き、`*.code-workspace`からWorkspaceを起動。
+// Web開発をしたい場合の利用方法 -> pj rootを開き、`>Reopen in Container`で起動。
+// 両方開発したい場合の利用方法 -> pj rootを開き、`*.code-workspace`からWorkspaceを起動、`code ../`を実行し開いたウィンドウで`>Reopen in Container`で起動。
+
+{
+	"folders": [
+		{
+			"name": "monorepo-root",
+			"path": "./"
+		},
+		{
+			"name": "firmware",
+			"path": "./firmware/"
+		}
+	],
+	"settings": {
+		"terminal.integrated.cwd": "${workspaceFolder:firmware}",
+		"js/ts.preferences.includePackageJsonAutoImports": "on"
+	}
+}

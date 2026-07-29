@@ -1,6 +1,8 @@
 #include <M5Unified.h>
 
 void setup() {
+  Serial.begin(115200);
+
   auto cfg = M5.config();
   M5.begin(cfg);
 }

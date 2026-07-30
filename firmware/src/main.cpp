@@ -35,7 +35,7 @@ void setup() {
   for (;;)
   {
     wifi_connector.connect(WIFI_SSID, WIFI_PASS);
-    if (wifi_connector.waitForConnection(20000))
+    if (wifi_connector.waitForConnection(5000))
     {
       Serial.println("WiFi connection success!");
       break;

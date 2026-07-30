@@ -32,6 +32,12 @@ const Component: FC<Props> = ({ socket }) => {
 		};
 	}, [socket, latest]);
 
+	// useEffect(() => {
+	// 	socket.emit("message", {name: "NestJS"}, (response: unknown) => {
+	// 		console.log("[try] message ack", response);
+	// 	});
+	// }, [socket])
+
 	const formatTimestamp = (timestamp: string | Date) => {
 		const date =
 			typeof timestamp === "string" ? new Date(timestamp) : timestamp;

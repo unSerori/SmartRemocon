@@ -2,6 +2,8 @@ import { Injectable } from '@nestjs/common';
 import { PostEnvDTO } from './dto/req.js';
 import { EnvLogRepo } from './env-log.repository.js';
 import { EnvLog, Prisma } from './generated/prisma/client.js';
+import { EventEmitter2 } from '@nestjs/event-emitter';
+import { ENV_LOG_CREATED } from './env.events.js';
 
 // export type EnvLog = {
 //   id: number;
@@ -18,7 +20,10 @@ import { EnvLog, Prisma } from './generated/prisma/client.js';
 
 @Injectable()
 export class AppService {
-  constructor(private readonly EnvLogRepo: EnvLogRepo) {}
+  constructor(
+    private readonly envLogRepo: EnvLogRepo,
+    private readonly eventEmitter: EventEmitter2,
+  ) {}
 
   getHello(): string {
     return 'Hello World!';
@@ -63,8 +68,9 @@ export class AppService {
 
     // testDataList.push(testData);
     // TODO: ここでリポジトリ層の登録処理を呼ぶぜ！！！
-    const saveLog = await this.EnvLogRepo.add(createData);
+    const saveLog = await this.envLogRepo.add(createData);
     console.log('Saved to DB: ', saveLog);
+    this.eventEmitter.emit(ENV_LOG_CREATED, saveLog);
 
     // console.log('testDataList: ', testDataList);
 
@@ -74,7 +80,7 @@ export class AppService {
   async fetchEnvLogs(limit?: number): Promise<EnvLog[]> {
     // 型がわからん
     // console.log('testData: ', testDataList);
-    const envLogs = await this.EnvLogRepo.list(limit); // ?: repo層が返す型の確定 // ?: getにはlimitを渡すべきか？このあと返り血をlimitで削減するか？
+    const envLogs = await this.envLogRepo.list(limit); // ?: repo層が返す型の確定 // ?: getにはlimitを渡すべきか？このあと返り血をlimitで削減するか？
 
     return envLogs;
   }

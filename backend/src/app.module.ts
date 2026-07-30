@@ -4,9 +4,10 @@ import { AppService } from './app.service.js';
 import { PrismaService } from './prisma.service.js';
 import { EnvLogRepo } from './env-log.repository.js';
 import { EnvGateway } from './env.gateway.js';
+import { EventEmitterModule } from '@nestjs/event-emitter';
 
 @Module({
-  imports: [],
+  imports: [EventEmitterModule.forRoot()],
   controllers: [AppController],
   providers: [AppService, PrismaService, EnvLogRepo, EnvGateway],
 })

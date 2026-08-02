@@ -3,7 +3,7 @@
 #include <M5Unified.h>
 #include "usecase/SendEnvDataUseCase.h"
 
-SendEnvDataUseCase::SendEnvDataUseCase(EnvSensor& sensor, IEnvSender& sender)
+SendEnvDataUseCase::SendEnvDataUseCase(EnvSensor& sensor, ISender<EnvData>& sender)
     : sensor_(sensor), sender_(sender) {} // メンバ初期化子リスト
 
 void SendEnvDataUseCase::execute() {

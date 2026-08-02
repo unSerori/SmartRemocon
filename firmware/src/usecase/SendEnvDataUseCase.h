@@ -2,14 +2,15 @@
 
 #pragma once
 #include "sensor/EnvSensor.h"
-#include "network/IEnvSender.h"
+#include "network/ISender.h"
+#include "sensor/EnvData.h"
 
 class SendEnvDataUseCase
 {
 private:
     EnvSensor& sensor_;
-    IEnvSender& sender_;
+    ISender<EnvData>& sender_;
 public:
-    SendEnvDataUseCase(EnvSensor& sensor, IEnvSender& sender);
+    SendEnvDataUseCase(EnvSensor& sensor, ISender<EnvData>& sender);
     void execute();
 };

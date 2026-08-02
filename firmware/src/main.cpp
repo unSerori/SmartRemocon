@@ -5,12 +5,14 @@
 
 #include <M5Unified.h>
 #include <ESPmDNS.h>
-#include <WiFi.h> // あとで消す
+#include <WiFi.h>
 #include <IRremote.hpp> // hpp
 #include "credentials.h"
+#include "network/MqttConnection.h"
+#include "network/MqttSender.h"
 #include "sensor/EnvSensor.h"
-// #include "network/HttpEnvSender.h"
-#include "network/MqttEnvSender.h"
+#include "sensor/EnvData.h"
+#include "device/DeviceRegisterData.h"
 #include "network/WiFiConnector.h"
 #include "usecase/SendEnvDataUseCase.h"
 
@@ -24,19 +26,41 @@ IRData last_ir_data;
 // オブジェクト作成
 EnvSensor env_sensor;
 WiFiConnector wifi_connector;
-// HttpEnvSender env_sender("http", HOST, 8080, "/api/env", wifi_connector);
-std::optional<MqttEnvSender> env_sender;
+
+std::optional<MqttConnection> mqtt_connection;
+
+std::optional<MqttSender<EnvData>> env_sender;
 std::optional<SendEnvDataUseCase> send_env_data_use_case;
 
-void setupEnvSending(){ // `mosquitto_sub -h localhost -p 1883 -t "smart_remocon/devices/+/env" -v`
+std::optional<MqttSender<DeviceRegisterData>> register_sender;
+
+void setupMqttConnection(){
   String client_id = WiFi.macAddress();
   Serial.printf("client_id: %s\n", client_id.c_str());
 
-  std::string topic = "smart_remocon/devices/" + std::string(client_id.c_str()) + "/env";
-  Serial.printf("topic: %s\n", topic.c_str());
+  mqtt_connection.emplace("mqtt", HOST, MQTT_PORT, client_id, wifi_connector);
+}
 
-  env_sender.emplace("mqtt", HOST, MQTT_PORT, topic, client_id, wifi_connector);
+void setupEnvSending(){ // `mosquitto_sub -h localhost -p 1883 -t "smart_remocon/devices/+/env" -v`
+  std::string topic = "smart_remocon/devices/" + std::string(WiFi.macAddress().c_str()) + "/env";
+  Serial.printf("topic: %s\n", topic.c_str());
+  env_sender.emplace(*mqtt_connection, topic);
+
   send_env_data_use_case.emplace(env_sensor, *env_sender);
+}
+
+void setupDeviceRegistering() {
+  std::string topic = "smart_remocon/devices/" + std::string(WiFi.macAddress().c_str()) + "/register";
+  Serial.printf("topic: %s\n", topic.c_str());
+  register_sender.emplace(*mqtt_connection, topic);
+
+  DeviceRegisterData data;
+  data.mac_address = std::string(WiFi.macAddress().c_str());
+  data.ip_address = std::string(WiFi.localIP().toString().c_str());
+  data.name = DEVICE_NAME;
+
+  bool ok = register_sender->send(data);
+  Serial.printf("Register send: %s.\n", ok ? "success": "failed");
 }
 
 void setup() {
@@ -69,7 +93,9 @@ void setup() {
 
   // TODO: ここに移動かも
 
+  setupMqttConnection();
   setupEnvSending();
+  setupDeviceRegistering();
 
   IrSender.begin(IR_SEND_PIN);
   IrReceiver.begin(IR_RECEIVE_PIN, ENABLE_LED_FEEDBACK); 

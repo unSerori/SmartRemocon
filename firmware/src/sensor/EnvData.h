@@ -2,6 +2,8 @@
 
 #pragma once
 
+#include <ArduinoJson.h>
+
 struct EnvData
 {
     float temperature_sht;
@@ -9,3 +11,5 @@ struct EnvData
     float humidity;
     float pressure;
 }; 
+
+bool convertToJson(const EnvData& src, JsonVariant dts);

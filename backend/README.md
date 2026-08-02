@@ -174,6 +174,9 @@ npx prisma format
 
 # マイグレーション履歴をリセット（DB全削除->再適用）
 npx prisma migrate reset
+
+# ボリューム削除後のマイグレーションｓ
+npx prisma migrate deploy
 ```
 
 MySQL: databaseコンテナ内。

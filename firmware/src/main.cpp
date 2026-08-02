@@ -9,7 +9,8 @@
 #include <IRremote.hpp> // hpp
 #include "credentials.h"
 #include "sensor/EnvSensor.h"
-#include "network/HttpEnvSender.h"
+// #include "network/HttpEnvSender.h"
+#include "network/MqttEnvSender.h"
 #include "network/WiFiConnector.h"
 #include "usecase/SendEnvDataUseCase.h"
 
@@ -23,10 +24,20 @@ IRData last_ir_data;
 // オブジェクト作成
 EnvSensor env_sensor;
 WiFiConnector wifi_connector;
-HttpEnvSender env_sender("http", HOST, 8080, "/api/env", wifi_connector);
-SendEnvDataUseCase send_env_data_use_case(env_sensor, env_sender);
+// HttpEnvSender env_sender("http", HOST, 8080, "/api/env", wifi_connector);
+std::optional<MqttEnvSender> env_sender;
+std::optional<SendEnvDataUseCase> send_env_data_use_case;
 
-// TODO: とりあえず送受信をマイコンで完結させるために変数定義すべきか？
+void setupEnvSending(){ // `mosquitto_sub -h localhost -p 1883 -t "smart_remocon/devices/+/env" -v`
+  String client_id = WiFi.macAddress();
+  Serial.printf("client_id: %s\n", client_id.c_str());
+
+  std::string topic = "smart_remocon/devices/" + std::string(client_id.c_str()) + "/env";
+  Serial.printf("topic: %s\n", topic.c_str());
+
+  env_sender.emplace("mqtt", HOST, MQTT_PORT, topic, client_id, wifi_connector);
+  send_env_data_use_case.emplace(env_sensor, *env_sender);
+}
 
 void setup() {
   Serial.begin(115200);
@@ -34,7 +45,7 @@ void setup() {
   auto cfg = M5.config();
   M5.begin(cfg);
 
-  env_sensor.begin();
+  env_sensor.begin(); // TODO: これもっと下かも。本体の初期化、ネットワーク確立、センサー類起動、
 
   for (;;)
   {
@@ -55,6 +66,10 @@ void setup() {
   }
   Serial.println("mDNS started!");
   Serial.printf("WiFi.localIP(): %s\n", WiFi.localIP().toString().c_str());
+
+  // TODO: ここに移動かも
+
+  setupEnvSending();
 
   IrSender.begin(IR_SEND_PIN);
   IrReceiver.begin(IR_RECEIVE_PIN, ENABLE_LED_FEEDBACK); 
@@ -107,6 +122,6 @@ void loop() {
   // C押したら環境値送信
   if (M5.BtnC.wasPressed())
   {
-    send_env_data_use_case.execute();
+    send_env_data_use_case->execute();
   }
 }

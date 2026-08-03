@@ -188,3 +188,19 @@ mysql -u root -p${MYSQL_ROOT_PASSWORD}
 # 権限付与
 GRANT ALL PRIVILEGES ON *.* TO '${MYSQL_USER}'@'%';
 ```
+
+コンテナ直接でリセット。
+
+```bash
+mysql -u root -proot
+
+use database
+
+SELECT * FROM ir_sensor_values;
+SELECT * FROM devices;
+
+DELETE FROM ir_sensor_values;
+DELETE FROM devices;
+
+UPDATE devices SET collect_matrics = 1 WHERE id = 1;
+```

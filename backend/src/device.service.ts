@@ -1,9 +1,10 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { DeviceRepo } from './device.repository.js';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { Device } from './generated/prisma/client.js';
 import { DeviceRegisterReqDto } from './dto/req/device.js';
 import { DEVICE_REGISTER } from './device.events.js';
+import { ClientProxy } from '@nestjs/microservices';
 
 @Injectable()
 export class DeviceService {

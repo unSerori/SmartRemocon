@@ -19,10 +19,17 @@ private:
     WiFiClient wifi_client_; // pubsubclientが必要とする内部実装
     PubSubClient mqtt_client_;
 
+    std::function<void(const std::string&, const std::string&)> on_message_;
+
     bool ensureConnected();
 
 public:
     MqttConnection(std::string protocol, std::string host, uint16_t port, String client_id, INetworkStatus& network_status); // メンバ変数の初期化
 
     bool publish(const std::string& topic, const String& payload);
+    bool subscribe(const std::string& topic);
+    void setMessageHandler(std::function<void(const std::string&, const std::string&)> handler);
+    void loop(); // TODO: これをmain.cppのloop()内で呼ぶ
+    void handleMessage(char* topic, byte* payload, unsigned int length); // いったんpublic
+
 };

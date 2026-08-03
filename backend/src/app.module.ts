@@ -12,9 +12,22 @@ import { DeviceGateway } from './device.gateway.js';
 import { IrSensorValueRepo } from './ir-sensor-value.repository.js';
 import { IrSensorValueService } from './ir-sensor-value.service.js';
 import { IrSensorValueController } from './ir-sensor-value.controller.js';
+import { ClientsModule, Transport } from '@nestjs/microservices';
+import { MQTT_SERVICE } from './app.constant.js';
 
 @Module({
-  imports: [EventEmitterModule.forRoot()],
+  imports: [
+    EventEmitterModule.forRoot(),
+    ClientsModule.register([
+      {
+        name: MQTT_SERVICE,
+        transport: Transport.MQTT,
+        options: {
+          url: process.env.MQTT_URL ?? 'mqtt://mosquitto:1883',
+        },
+      },
+    ]),
+  ],
   controllers: [AppController, DeviceController, IrSensorValueController],
   providers: [
     AppService,

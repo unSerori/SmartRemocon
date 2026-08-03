@@ -2,6 +2,11 @@
 
 #include "network/MqttConnection.h"
 
+static MqttConnection* instance_ = nullptr;
+static void staticCallback(char* topic, byte* payload, unsigned int length){
+    if (instance_) instance_ ->handleMessage(topic, payload, length);
+}
+
 MqttConnection::MqttConnection(std::string protocol, std::string host, uint16_t port, String client_id, INetworkStatus& network_status)
     : protocol_(protocol),
       host_(host),
@@ -10,7 +15,22 @@ MqttConnection::MqttConnection(std::string protocol, std::string host, uint16_t 
       network_status_(network_status),
       wifi_client_(),
       mqtt_client_(wifi_client_)
-    {}
+    {
+        instance_ = this;
+        mqtt_client_.setCallback(staticCallback);
+    }
+
+void MqttConnection::handleMessage(char* topic, byte* payload, unsigned int length){
+    std::string payload_str(reinterpret_cast<char*>(payload), length);
+    if (on_message_)
+    {
+        on_message_(std::string(topic), payload_str);
+    }
+}
+
+void MqttConnection::setMessageHandler(std::function<void(const std::string&, const std::string&)> handler){
+    on_message_ = handler;
+}
 
 bool MqttConnection::ensureConnected() {
     if (!network_status_.isConnected())
@@ -45,4 +65,19 @@ bool MqttConnection::publish(const std::string& topic, const String& payload) {
     bool ok = mqtt_client_.publish(topic.c_str(), payload.c_str());
     Serial.printf("MQTT publish result: %s.\n", ok? "success": "failed");
     return ok;
+}
+
+bool MqttConnection::subscribe(const std::string& topic){
+    if (!ensureConnected())
+    {
+        return false;
+    }
+    bool ok = mqtt_client_.subscribe(topic.c_str());
+    Serial.printf("MQTT subscribe result: %s.\n", ok ? "success": "failed");
+    return ok;
+}
+
+void MqttConnection::loop(){
+    ensureConnected();
+    mqtt_client_.loop();
 }

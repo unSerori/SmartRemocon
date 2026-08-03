@@ -29,4 +29,18 @@ export class IrSensorValueRepo {
       data: { name },
     });
   }
+
+  async updateData(id: number, data: string): Promise<IrSensorValue> {
+    return await this.prisma.irSensorValue.update({
+      where: { id },
+      data: { data },
+    });
+  }
+
+  async findByDeviceId(id: number) {
+    return await this.prisma.irSensorValue.findUniqueOrThrow({
+      where: { id },
+      include: { device: true },
+    });
+  }
 }

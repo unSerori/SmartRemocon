@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common';
 import { Ctx, EventPattern, MqttContext, Payload } from '@nestjs/microservices';
 import { DeviceService } from './device.service.js';
 import { DeviceRegisterReqDto, type DeviceRegisterPayload } from './dto/req/device.js';
@@ -29,5 +29,12 @@ export class IrSensorValueController {
   @Delete('sensor/:id')
   async delete(@Param('id') id: string) {
     return await this.irSensorValueService.remove(Number(id));
+  }
+
+  @Put('sensor/:id')
+  async updateName(@Param('id') id: string, @Body() body: { name: string }) {
+    console.log(`id: ${id}`);
+
+    return await this.irSensorValueService.updateName(Number(id), body.name);
   }
 }

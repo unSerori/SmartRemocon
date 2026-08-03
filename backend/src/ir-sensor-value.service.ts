@@ -31,4 +31,8 @@ export class IrSensorValueService {
   async remove(id: number): Promise<IrSensorValue> {
     return await this.irSensorValueRepo.remove(id);
   }
+
+  async updateName(id: number, name: string): Promise<IrSensorValue> {
+    return await this.irSensorValueRepo.updateName(id, name);
+  }
 }

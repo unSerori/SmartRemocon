@@ -22,4 +22,11 @@ export class IrSensorValueRepo {
       where: { id },
     });
   }
+
+  async updateName(id: number, name: string): Promise<IrSensorValue> {
+    return await this.prisma.irSensorValue.update({
+      where: { id },
+      data: { name },
+    });
+  }
 }

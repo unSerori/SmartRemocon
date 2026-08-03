@@ -9,10 +9,13 @@ import { DeviceController } from './device.controller.js';
 import { DeviceRepo } from './device.repository.js';
 import { DeviceService } from './device.service.js';
 import { DeviceGateway } from './device.gateway.js';
+import { IrSensorValueRepo } from './ir-sensor-value.repository.js';
+import { IrSensorValueService } from './ir-sensor-value.service.js';
+import { IrSensorValueController } from './ir-sensor-value.controller.js';
 
 @Module({
   imports: [EventEmitterModule.forRoot()],
-  controllers: [AppController, DeviceController],
+  controllers: [AppController, DeviceController, IrSensorValueController],
   providers: [
     AppService,
     PrismaService,
@@ -21,6 +24,8 @@ import { DeviceGateway } from './device.gateway.js';
     DeviceRepo,
     DeviceService,
     DeviceGateway,
+    IrSensorValueRepo,
+    IrSensorValueService,
   ],
 })
 export class AppModule {}

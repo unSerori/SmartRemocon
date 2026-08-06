@@ -1,4 +1,4 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get, Query } from '@nestjs/common';
 import { Ctx, EventPattern, MqttContext, Payload } from '@nestjs/microservices';
 import { DeviceService } from './device.service.js';
 import { DeviceRegisterReqDto, type DeviceRegisterPayload } from './dto/req/device.js';
@@ -8,13 +8,20 @@ import { Device } from './generated/prisma/client.js';
 export class DeviceController {
   constructor(private readonly deviceService: DeviceService) {}
 
-  // HACK: このあたりどうにかする
-  @Get('devices')
-  async getDevices(): Promise<Device[]> {
-    // fillterで件数指定とか
-    console.log('/devices controller!');
+  // @Get('devices')
+  // async getDevices(): Promise<Device[]> {
+  //   // fillterで件数指定とか
+  //   console.log('/devices controller!');
 
-    // TODO: app.controller側を参考に
+  //   // TODO: app.controller側を参考に
+  //   return await this.deviceService.listDevices();
+  // }
+
+  @Get('devices')
+  async indexDevices(): Promise<Device[]> {
+    // TODO: @Query() filterを使って`?filter={collectMetrics:true}`を取得し、フィルターする
+    // TODO: ただし、今はcollectMetricsをUI側で操作して変更する方法がないため、後回し
+
     return await this.deviceService.listDevices();
   }
 

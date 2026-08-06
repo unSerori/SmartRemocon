@@ -33,6 +33,10 @@ export class DeviceService {
     return savedData;
   }
 
+  // async listDevices(): Promise<Device[]> {
+  //   return await this.deviceRepo.list();
+  // }
+
   async listDevices(): Promise<Device[]> {
     return await this.deviceRepo.list();
   }

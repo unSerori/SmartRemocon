@@ -27,9 +27,8 @@ export class AppController {
   }
 
   // HTTPのこれはやめて、
-  // TODO: `postEnvLog`に直す
   @Post('devices/:deviceMacAddress/env')
-  async recordEnvLog(@Param('deviceMacAddress') macAddress: string, @Body() body: PostEnvDTO) {
+  async createEnvLogHttp(@Param('deviceMacAddress') macAddress: string, @Body() body: PostEnvDTO) {
     console.log(`macAddress: ${macAddress}`);
     console.log('body.temperatureSht: ', body.temperatureSht);
 

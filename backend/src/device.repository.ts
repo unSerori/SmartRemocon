@@ -24,7 +24,15 @@ export class DeviceRepo {
     });
   }
 
-  // TODO: limitとか
+  // // TODO: limitとか
+  // async list(): Promise<Device[]> {
+  //   return await this.prisma.device.findMany({
+  //     orderBy: {
+  //       createdAt: 'desc',
+  //     },
+  //   });
+  // }
+
   async list(): Promise<Device[]> {
     return await this.prisma.device.findMany({
       orderBy: {

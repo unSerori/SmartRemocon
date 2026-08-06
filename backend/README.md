@@ -196,6 +196,7 @@ mysql -u root -proot
 
 use database
 
+SELECT * FROM env_logs;
 SELECT * FROM ir_sensor_values;
 SELECT * FROM devices;
 

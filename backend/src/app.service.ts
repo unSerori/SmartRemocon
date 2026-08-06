@@ -1,9 +1,12 @@
-import { Injectable } from '@nestjs/common';
-import { PostEnvDTO } from './dto/req.js';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { PostEnvDTO } from './dto/req_old.js';
 import { EnvLogRepo } from './env-log.repository.js';
 import { EnvLog, Prisma } from './generated/prisma/client.js';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { ENV_LOG_CREATED } from './env.events.js';
+import { EnvLogReqDto } from './dto/req/env-log.js';
+import { DeviceRepo } from './device.repository.js';
+import { DeviceNotFoundError } from './app/error/device-not-found.error.js';
 
 // export type EnvLog = {
 //   id: number;
@@ -22,6 +25,7 @@ import { ENV_LOG_CREATED } from './env.events.js';
 export class AppService {
   constructor(
     private readonly envLogRepo: EnvLogRepo,
+    private readonly deviceRepo: DeviceRepo,
     private readonly eventEmitter: EventEmitter2,
   ) {}
 
@@ -34,45 +38,27 @@ export class AppService {
     return 'Good By;;';
   }
 
-  async createEnvLog(reqEnvData: PostEnvDTO): Promise<EnvLog> {
+  async recordEnvLog(macAddress: string, reqEnvData: EnvLogReqDto): Promise<EnvLog> {
     console.log('reqEnvData: ', reqEnvData);
     console.log('reqEnvData.temperatureSht: ', reqEnvData.temperatureSht);
 
-    // const envlog: EnvLog = {
-    //   id: testDataList.length,
-    //   // device: Device;
-    //   temperatureSht: reqEnvData.temperatureSht,
-    //   humidity: reqEnvData.humidity,
-    //   temperatureQmp: reqEnvData.temperatureQmp,
-    //   pressure: reqEnvData.pressure,
-    //   createdAt: new Date(),
-    //   updatedAt: new Date(),
-    // };
-
-    // const createData: Prisma.EnvLogsCreateInput = {
-    //   temperatureSht: reqEnvData.temperatureSht,
-    //   humidity: reqEnvData.humidity,
-    //   temperatureQmp: reqEnvData.temperatureQmp,
-    //   pressure: reqEnvData.pressure,
-    //   createdAt: new Date(),
-    //   updatedAt: new Date(),
-    // };
+    const device = await this.deviceRepo.getByMaca(macAddress);
+    if (!device) {
+      throw new DeviceNotFoundError(macAddress);
+    }
 
     const createData: Prisma.EnvLogCreateInput = {
-      deviceId: 1, // TODO: ここはauto_incにすべきか、uuidにすべきか。deviceはauto_incでいいかも。
+      deviceId: device.id,
       temperatureSht: reqEnvData.temperatureSht,
       humidity: reqEnvData.humidity,
       temperatureQmp: reqEnvData.temperatureQmp,
       pressure: reqEnvData.pressure,
     };
 
-    // testDataList.push(testData);
-    // TODO: ここでリポジトリ層の登録処理を呼ぶぜ！！！
     const saveLog = await this.envLogRepo.add(createData);
     console.log('Saved to DB: ', saveLog);
-    this.eventEmitter.emit(ENV_LOG_CREATED, saveLog);
 
-    // console.log('testDataList: ', testDataList);
+    this.eventEmitter.emit(ENV_LOG_CREATED, saveLog);
 
     return saveLog;
   }

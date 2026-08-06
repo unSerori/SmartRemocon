@@ -6,6 +6,12 @@ import { PrismaService } from './prisma.service.js';
 export class DeviceRepo {
   constructor(private prisma: PrismaService) {}
 
+  async getByMaca(macAddress: string): Promise<Device | null> {
+    return await this.prisma.device.findUnique({
+      where: { macAddress: macAddress },
+    });
+  }
+
   async upsertByClientId(
     where: Prisma.DeviceWhereUniqueInput,
     create: Prisma.DeviceCreateInput,

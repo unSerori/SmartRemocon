@@ -1,4 +1,3 @@
-// TODO: reqもこっちの構造に変更する。
 import { EnvLog } from '../../generated/prisma/client.js';
 
 export class EnvLogResDto {

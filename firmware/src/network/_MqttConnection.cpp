@@ -2,6 +2,7 @@
 
 #include "network/MqttConnection.h"
 
+// NOTE: PubSubClientのコールバックはCの関数ポインタしか受け付けないため、
 static MqttConnection* instance_ = nullptr;
 static void staticCallback(char* topic, byte* payload, unsigned int length){
     if (instance_) instance_ ->handleMessage(topic, payload, length);

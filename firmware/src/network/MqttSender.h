@@ -12,6 +12,7 @@
 template <typename T>
 class MqttSender: public ISender<T>
 {
+    // NOTE: TがconvertToJsonを持つことを静的に確定するため
     static_assert(
         std::is_same<
             decltype(convertToJson(std::declval<const T&>(), std::declval<JsonVariant>())),

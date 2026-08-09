@@ -1,7 +1,7 @@
 import { Body, Controller, Delete, Get, Inject, Param, Post, Put } from '@nestjs/common';
 import { ClientProxy, Ctx, EventPattern, MqttContext, Payload } from '@nestjs/microservices';
 import { DeviceService } from './device.service.js';
-import { DeviceRegisterReqDto, type DeviceRegisterPayload } from './dto/req/device.js';
+import { DeviceRegisterReqDto } from './dto/req/device.js';
 import { Device, IrSensorValue } from './generated/prisma/client.js';
 import { IrSensorValueService } from './ir-sensor-value.service.js';
 

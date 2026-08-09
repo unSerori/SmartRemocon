@@ -7,7 +7,7 @@
 #include <PubSubClient.h>
 #include "network/INetworkStatus.h"
 
-class MqttConnection
+class MqttConnectionOld
 {
 private:
     std::string protocol_; // mqtt or mqtts
@@ -24,7 +24,7 @@ private:
     bool ensureConnected();
 
 public:
-    MqttConnection(std::string protocol, std::string host, uint16_t port, String client_id, INetworkStatus& network_status); // メンバ変数の初期化
+    MqttConnectionOld(std::string protocol, std::string host, uint16_t port, String client_id, INetworkStatus& network_status); // メンバ変数の初期化
 
     bool publish(const std::string& topic, const String& payload);
     bool subscribe(const std::string& topic);

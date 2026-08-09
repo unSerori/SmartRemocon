@@ -36,7 +36,9 @@ std::optional<SendEnvDataUseCase> send_env_data_use_case;
 std::optional<MqttSender<DeviceRegisterData>> register_sender;
 
 void setupMqttConnection(){
-  // TODO:
+  String client_id = WiFi.macAddress();
+  Serial.printf("client_id: %s\n", client_id);
+  mqtt_connection.emplace("mqtt", HOST, MQTT_PORT, client_id, wifi_connector);
 }
 
 void setupEnvSending(){ // `mosquitto_sub -h localhost -p 1883 -t "smart_remocon/devices/+/env" -v`

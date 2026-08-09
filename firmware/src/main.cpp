@@ -36,10 +36,7 @@ std::optional<SendEnvDataUseCase> send_env_data_use_case;
 std::optional<MqttSender<DeviceRegisterData>> register_sender;
 
 void setupMqttConnection(){
-  String client_id = WiFi.macAddress();
-  Serial.printf("client_id: %s\n", client_id.c_str());
-
-  mqtt_connection.emplace("mqtt", HOST, MQTT_PORT, client_id, wifi_connector);
+  // TODO:
 }
 
 void setupEnvSending(){ // `mosquitto_sub -h localhost -p 1883 -t "smart_remocon/devices/+/env" -v`
@@ -51,60 +48,11 @@ void setupEnvSending(){ // `mosquitto_sub -h localhost -p 1883 -t "smart_remocon
 }
 
 void setupDeviceRegistering() {
-  std::string topic = "smart_remocon/devices/" + std::string(WiFi.macAddress().c_str()) + "/register";
-  Serial.printf("topic: %s\n", topic.c_str());
-  register_sender.emplace(*mqtt_connection, topic);
-
-  DeviceRegisterData data;
-  data.mac_address = std::string(WiFi.macAddress().c_str());
-  data.ip_address = std::string(WiFi.localIP().toString().c_str());
-  data.name = DEVICE_NAME;
-
-  bool ok = register_sender->send(data);
-  Serial.printf("Register send: %s.\n", ok ? "success": "failed");
+  // TODO: 
 }
 
 void setupIrSubscriptions() {
-  std::string learn_topic = "smart_remocon/devices/" + std::string(WiFi.macAddress().c_str()) + "/ir/learn";
-  std::string execute_topic = "smart_remocon/devices/" + std::string(WiFi.macAddress().c_str()) + "/ir/execute";
-  // TODO: Serial
-
-  mqtt_connection -> setMessageHandler([](const std::string& topic, const std::string& payload){
-    Serial.printf("Received on topic [%s]: %s\n", topic.c_str(), payload.c_str());
-
-    JsonDocument doc;
-    DeserializationError err = deserializeJson(doc, payload);
-    if (err) {
-      Serial.printf("JSON parse failed: %s\n", err.c_str());
-      return;
-    }
-
-    JsonVariant data = doc["data"];
-
-    if (topic.find("/ir/learn") != std::string::npos) {
-      learning_sensor_id = doc["data"]["sensorId"];
-    }else if (topic.find("/ir/execute") != std::string::npos){
-      std::string data_str = doc["data"]["data"];
-      uint64_t raw_data = strtoull(data_str.c_str(), nullptr, 16);
-
-      Serial.println("IR Send: Start.");
-      IrSender.sendPulseDistanceWidth(
-        38,                     // 赤外線搬送波周波数（kHz）
-        9000, 4500,             // リーダーパルス（ON, OFF）
-        560, 1690,              // "1" のパルス幅（ON, OFF）
-        560, 550,               // "0" のパルス幅（ON, OFF）
-        raw_data,          // 送信データ（48ビット）
-        48,                     // データ長（ビット数）
-        PROTOCOL_IS_LSB_FIRST,  // LSBファースト
-        0,                      // 繰り返し周期（0 = 送信しない）
-        2                       // 送信回数（リモコンのように2回送る）
-      );
-      Serial.println("IR Send: End.");
-    }
-  });
-
-  mqtt_connection->subscribe(learn_topic);
-  mqtt_connection->subscribe(execute_topic);
+  // TODO: 
 }
 
 void setup() {
@@ -139,8 +87,8 @@ void setup() {
 
   setupMqttConnection();
   setupEnvSending();
-  setupDeviceRegistering();
-  setupIrSubscriptions();
+  // setupDeviceRegistering();
+  // setupIrSubscriptions();
 
   IrSender.begin(IR_SEND_PIN);
   IrReceiver.begin(IR_RECEIVE_PIN, ENABLE_LED_FEEDBACK); 
@@ -152,41 +100,14 @@ void loop() {
 
   // Aを押すと取得
   if (IrReceiver.decode()) { 
-    // if (M5.BtnA.isPressed()){
-    //   if (IrReceiver.decodedIRData.decodedRawData != 0) // HACK: これは多分ブス
-    //   {
-    //     last_ir_data = IrReceiver.decodedIRData;
-    //     Serial.println(last_ir_data.decodedRawData, HEX);
-
-    //     IrReceiver.printIRResultShort(&Serial);  // 受信したデータの簡潔な概要を表示
-    //     IrReceiver.printIRSendUsage(&Serial);    // 受信した信号を送信するためのコードを表示
-    //   }
-    // }
-    // IrReceiver.resume();
-    if (learning_sensor_id != -1)
-    {
-      if (IrReceiver.decodedIRData.decodedRawData != 0)
+    if (M5.BtnA.isPressed()){
+      if (IrReceiver.decodedIRData.decodedRawData != 0) // HACK: これは多分ブス
       {
         last_ir_data = IrReceiver.decodedIRData;
         Serial.println(last_ir_data.decodedRawData, HEX);
 
         IrReceiver.printIRResultShort(&Serial);  // 受信したデータの簡潔な概要を表示
         IrReceiver.printIRSendUsage(&Serial);    // 受信した信号を送信するためのコードを表示
-
-        char hex_buf[17];
-        snprintf(hex_buf, sizeof(hex_buf), "%llX", last_ir_data.decodedRawData);
-
-        std::string learning_topic = "smart_remocon/devices/" + std::string(WiFi.macAddress().c_str()) + "/ir/learned";
-        JsonDocument doc;
-        doc["sensorId"] = learning_sensor_id;
-        doc["irData"] = hex_buf;
-        String payload;
-        serializeJson(doc, payload);
-
-        bool ok = mqtt_connection -> publish(learning_topic, payload);
-        Serial.printf("Learned data publish: %s.\n", ok ? "success": "failed");
-
-        learning_sensor_id = -1;
       }
     }
     IrReceiver.resume();

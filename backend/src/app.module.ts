@@ -5,7 +5,7 @@ import { PrismaService } from './prisma.service.js';
 import { EnvLogRepo } from './env-log.repository.js';
 import { EnvGateway } from './env.gateway.js';
 import { EventEmitterModule } from '@nestjs/event-emitter';
-import { DeviceController } from './device.controller.js';
+import { DeviceMqttController } from './device-mqtt.controller.js';
 import { DeviceRepo } from './device.repository.js';
 import { DeviceService } from './device.service.js';
 import { DeviceGateway } from './device.gateway.js';
@@ -14,6 +14,7 @@ import { IrSensorValueService } from './ir-sensor-value.service.js';
 import { IrSensorValueController } from './ir-sensor-value.controller.js';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { MQTT_SERVICE } from './app.constant.js';
+import { DeviceHttpController } from './device-http.controller.js';
 
 @Module({
   imports: [
@@ -28,7 +29,7 @@ import { MQTT_SERVICE } from './app.constant.js';
       },
     ]),
   ],
-  controllers: [AppController, DeviceController, IrSensorValueController],
+  controllers: [AppController, DeviceHttpController, DeviceMqttController, IrSensorValueController],
   providers: [
     AppService,
     PrismaService,

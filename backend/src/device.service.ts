@@ -4,7 +4,12 @@ import { EventEmitter2 } from '@nestjs/event-emitter';
 import { Device } from './generated/prisma/client.js';
 import { DeviceRegisterReqDto } from './dto/req/device.js';
 import { DEVICE_REGISTER } from './device.events.js';
-import { ClientProxy } from '@nestjs/microservices';
+import { retry } from 'rxjs';
+
+function buildDefaultDeviceName(macAddress: string): string {
+  const lastTwoOctets = macAddress.split(':').slice(-2).join('');
+  return `Device-${lastTwoOctets}`;
+}
 
 @Injectable()
 export class DeviceService {
@@ -14,21 +19,24 @@ export class DeviceService {
   ) {}
 
   async registerDevice(data: DeviceRegisterReqDto): Promise<Device> {
-    // TODO: ここでDBに登録
-    // TODO: nameが空ならx
+    const name = data.name?.trim() || buildDefaultDeviceName(data.macAddress);
+
     const savedData = await this.deviceRepo.upsertByClientId(
-      { macAddress: data.macAddress },
+      data.macAddress,
       {
         macAddress: data.macAddress,
         ipAddress: data.ipAddress,
-        name: data.name,
+        name,
         registerdAt: new Date(),
       },
-      { ipAddress: data.ipAddress },
+      {
+        ipAddress: data.ipAddress,
+        // userが手動（dashboard）で設定したものを採用したいため、nameは初回登録時のみ
+      },
     );
     console.log('DB ok.');
 
-    // TODO: 成功したらwsのイベントを発火させてfrontendに反映
+    // 成功したらwsのイベントを発火させてfrontendに反映
     this.eventEmmitter.emit(DEVICE_REGISTER, savedData);
 
     return savedData;

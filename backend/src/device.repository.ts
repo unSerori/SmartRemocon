@@ -13,14 +13,14 @@ export class DeviceRepo {
   }
 
   async upsertByClientId(
-    where: Prisma.DeviceWhereUniqueInput,
-    create: Prisma.DeviceCreateInput,
-    update: Prisma.DeviceUpdateInput,
+    macAddress: string,
+    createData: Prisma.DeviceCreateInput,
+    updateData: Prisma.DeviceUpdateInput,
   ): Promise<Device> {
     return await this.prisma.device.upsert({
-      where,
-      create,
-      update,
+      where: { macAddress },
+      create: createData,
+      update: updateData,
     });
   }
 

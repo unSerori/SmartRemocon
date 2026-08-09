@@ -37,7 +37,7 @@ std::optional<MqttSender<DeviceRegisterData>> register_sender;
 
 void setupMqttConnection(){
   String client_id = WiFi.macAddress();
-  Serial.printf("client_id: %s\n", client_id);
+  Serial.printf("client_id: %s\n", client_id.c_str());
   mqtt_connection.emplace("mqtt", HOST, MQTT_PORT, client_id, wifi_connector);
 }
 
@@ -50,7 +50,18 @@ void setupEnvSending(){ // `mosquitto_sub -h localhost -p 1883 -t "smart_remocon
 }
 
 void setupDeviceRegistering() {
-  // TODO: 
+  std::string topic = "smart_remocon/devices/" + std::string(WiFi.macAddress().c_str()) + "/register";
+  Serial.printf("topic: %s\n", topic.c_str());
+
+  register_sender.emplace(*mqtt_connection, topic);
+
+  DeviceRegisterData data;
+  data.mac_address = WiFi.macAddress().c_str();
+  data.ip_address = WiFi.localIP().toString().c_str();
+  data.name = DEVICE_NAME;
+
+  bool ok = register_sender->send(data);
+  Serial.printf("Register send: %s.\n", ok ? "success": "failed");
 }
 
 void setupIrSubscriptions() {
@@ -88,8 +99,8 @@ void setup() {
   // TODO: ここに移動かも
 
   setupMqttConnection();
+  setupDeviceRegistering();
   setupEnvSending();
-  // setupDeviceRegistering();
   // setupIrSubscriptions();
 
   IrSender.begin(IR_SEND_PIN);

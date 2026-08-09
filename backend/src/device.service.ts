@@ -15,6 +15,7 @@ export class DeviceService {
 
   async registerDevice(data: DeviceRegisterReqDto): Promise<Device> {
     // TODO: ここでDBに登録
+    // TODO: nameが空ならx
     const savedData = await this.deviceRepo.upsertByClientId(
       { macAddress: data.macAddress },
       {

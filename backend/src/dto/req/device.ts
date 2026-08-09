@@ -20,13 +20,13 @@ export class DeviceRegisterReqDto {
   @IsString()
   name!: string;
 
-  static fromPayload(payload: DeviceRegisterPayload): DeviceRegisterReqDto {
-    const dto = plainToInstance(DeviceRegisterReqDto, payload);
-    const errors = validateSync(dto);
-    if (errors.length > 0) {
-      throw new RpcException(`Invalid payload: ${JSON.stringify(errors)}`); // FIX: 例外ｍｓｇｓ
-    }
+  // static fromPayload(payload: DeviceRegisterPayload): DeviceRegisterReqDto {
+  //   const dto = plainToInstance(DeviceRegisterReqDto, payload);
+  //   const errors = validateSync(dto);
+  //   if (errors.length > 0) {
+  //     throw new RpcException(`Invalid payload: ${JSON.stringify(errors)}`); // FIX: 例外ｍｓｇｓ
+  //   }
 
-    return dto;
-  }
+  //   return dto;
+  // }
 }

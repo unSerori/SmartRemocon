@@ -1,5 +1,4 @@
 import { Body, Controller, Get, Param, Post, Query } from '@nestjs/common';
-import { PostEnvDTO } from './dto/req_old.js';
 import { AppService } from './app.service.js';
 import { EnvLogResDto } from './dto/res/env-log.js';
 import { Ctx, EventPattern, MqttContext, Payload, RpcException } from '@nestjs/microservices';
@@ -27,7 +26,10 @@ export class AppHttpController {
   }
 
   @Post('devices/:deviceMacAddress/env')
-  async createEnvLogHttp(@Param('deviceMacAddress') macAddress: string, @Body() body: PostEnvDTO) {
+  async createEnvLogHttp(
+    @Param('deviceMacAddress') macAddress: string,
+    @Body() body: EnvLogReqDto,
+  ) {
     console.log(`macAddress: ${macAddress}`);
     console.log('body.temperatureSht: ', body.temperatureSht);
 

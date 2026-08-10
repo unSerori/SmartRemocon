@@ -1,5 +1,4 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { PostEnvDTO } from './dto/req_old.js';
 import { EnvLogRepo } from './env-log.repository.js';
 import { EnvLog, Prisma } from './generated/prisma/client.js';
 import { EventEmitter2 } from '@nestjs/event-emitter';

@@ -15,6 +15,7 @@ import { IrSensorValueController } from './ir-sensor-value.controller.js';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { MQTT_SERVICE } from './app.constant.js';
 import { DeviceHttpController } from './device-http.controller.js';
+import { AppHttpController } from './app-http.controller.js';
 
 @Module({
   imports: [
@@ -30,6 +31,7 @@ import { DeviceHttpController } from './device-http.controller.js';
     ]),
   ],
   controllers: [
+    AppHttpController,
     AppMqttController,
     DeviceHttpController,
     DeviceMqttController,

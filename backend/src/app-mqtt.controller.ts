@@ -1,6 +1,6 @@
 import { Body, Controller, Get, Param, Post, Query } from '@nestjs/common';
 import { AppService } from './app.service.js';
-import { EnvLogListResDto } from './env-log/dto/env-log.js';
+import { EnvLogListResDto } from './env-log/dto/env-log-list-res.dto.js';
 import { Ctx, EventPattern, MqttContext, Payload, RpcException } from '@nestjs/microservices';
 import { EnvLogRecordReqDto } from './env-log/dto/env-log-record-req.dto.js';
 import {

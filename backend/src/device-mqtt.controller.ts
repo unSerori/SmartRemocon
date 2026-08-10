@@ -1,7 +1,7 @@
 import { Controller } from '@nestjs/common';
 import { Ctx, EventPattern, MqttContext, Payload } from '@nestjs/microservices';
 import { DeviceService } from './device.service.js';
-import { DeviceRegistationReqDto } from './device/dto/deviceRegistation.req.js';
+import { DeviceRegistationReqDto } from './device/dto/device-registation.req.js';
 
 @Controller()
 export class DeviceMqttController {

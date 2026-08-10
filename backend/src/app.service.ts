@@ -3,7 +3,7 @@ import { EnvLogRepo } from './env-log.repository.js';
 import { EnvLog, Prisma } from './generated/prisma/client.js';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { ENV_LOG_CREATED } from './env.events.js';
-import { EnvLogReqDto } from './dto/req/env-log.js';
+import { EnvLogReqDto } from './env-log/dto/env-log.js';
 import { DeviceRepo } from './device.repository.js';
 import { DeviceNotFoundError } from './app/error/device-not-found.error.js';
 

@@ -2,7 +2,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { DeviceRepo } from './device.repository.js';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { Device } from './generated/prisma/client.js';
-import { DeviceRegisterReqDto } from './dto/req/device.js';
+import { DeviceRegisterReqDto } from './device/dto/device.js';
 import { DEVICE_REGISTER } from './device.events.js';
 import { retry } from 'rxjs';
 

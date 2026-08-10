@@ -3,7 +3,7 @@ import { EnvLogRepo } from './env-log.repository.js';
 import { EnvLog, Prisma } from './generated/prisma/client.js';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { ENV_LOG_CREATED } from './env.events.js';
-import { EnvLogReqDto } from './env-log/dto/env-log.js';
+import { EnvLogRecordReqDto } from './env-log/dto/env-log-record-req.dto.js';
 import { DeviceRepo } from './device.repository.js';
 import { DeviceNotFoundError } from './app/error/device-not-found.error.js';
 
@@ -37,7 +37,7 @@ export class AppService {
     return 'Good By;;';
   }
 
-  async recordEnvLog(macAddress: string, reqEnvData: EnvLogReqDto): Promise<EnvLog> {
+  async recordEnvLog(macAddress: string, reqEnvData: EnvLogRecordReqDto): Promise<EnvLog> {
     console.log('reqEnvData: ', reqEnvData);
     console.log('reqEnvData.temperatureSht: ', reqEnvData.temperatureSht);
 

@@ -2,7 +2,7 @@ import { Body, Controller, Get, Param, Post, Query } from '@nestjs/common';
 import { AppService } from './app.service.js';
 import { EnvLogResDto } from './dto/res/env-log.js';
 import { Ctx, EventPattern, MqttContext, Payload, RpcException } from '@nestjs/microservices';
-import { EnvLogReqDto } from './env-log/dto/env-log.js';
+import { EnvLogRecordReqDto } from './env-log/dto/env-log-record-req.dto.js';
 import {
   DeviceNotFoundHttpException,
   DeviceNotFoundMqttException,
@@ -28,7 +28,7 @@ export class AppHttpController {
   @Post('devices/:deviceMacAddress/env')
   async createEnvLogHttp(
     @Param('deviceMacAddress') macAddress: string,
-    @Body() body: EnvLogReqDto,
+    @Body() body: EnvLogRecordReqDto,
   ) {
     console.log(`macAddress: ${macAddress}`);
     console.log('body.temperatureSht: ', body.temperatureSht);

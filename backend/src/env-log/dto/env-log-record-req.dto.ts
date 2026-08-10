@@ -1,6 +1,6 @@
 import { IsNotEmpty, IsNumber } from 'class-validator';
 
-export class EnvLogReqDto {
+export class EnvLogRecordReqDto {
   // @IsNumber({}, {})
   // @IsNotEmpty()
   temperatureSht!: number; // CONTEXT: DTOとして後から設定されるため初期値不要

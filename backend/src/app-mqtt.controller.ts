@@ -2,7 +2,7 @@ import { Body, Controller, Get, Param, Post, Query } from '@nestjs/common';
 import { AppService } from './app.service.js';
 import { EnvLogResDto } from './dto/res/env-log.js';
 import { Ctx, EventPattern, MqttContext, Payload, RpcException } from '@nestjs/microservices';
-import { EnvLogReqDto } from './env-log/dto/env-log.js';
+import { EnvLogRecordReqDto } from './env-log/dto/env-log-record-req.dto.js';
 import {
   DeviceNotFoundHttpException,
   DeviceNotFoundMqttException,
@@ -17,7 +17,7 @@ export class AppMqttController {
 
   // こっちに移行（ただしhttpの方もテスト用に残す）
   @(EventPattern('smart_remocon/devices/+/env') as MethodDecorator) // FIX: 修正待ち
-  async createEnvLog(@Payload() dto: EnvLogReqDto, @Ctx() context: MqttContext) {
+  async createEnvLog(@Payload() dto: EnvLogRecordReqDto, @Ctx() context: MqttContext) {
     console.log(`topic: ${context.getTopic()}`);
     console.log(`env dto.temperatureSht: ${dto.temperatureSht}`);
     console.log(`env dto.humidity: ${dto.humidity}`);

@@ -2,7 +2,7 @@ import { RpcException } from '@nestjs/microservices';
 import { plainToInstance } from 'class-transformer';
 import { IsIP, IsNotEmpty, IsString, validateSync } from 'class-validator';
 
-export class DeviceRegisterReqDto {
+export class DeviceRegistationReqDto {
   @IsString()
   @IsNotEmpty()
   macAddress!: string;

@@ -2,7 +2,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { DeviceRepo } from './device.repository.js';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { Device, IrSensorValue } from './generated/prisma/client.js';
-import { DeviceRegisterReqDto } from './device/dto/device.js';
+import { DeviceRegistationReqDto } from './device/dto/deviceRegistation.req.js';
 import { DEVICE_REGISTER } from './device.events.js';
 import { IrSensorValueRepo } from './ir-sensor-value.repository.js';
 import { ClientProxy } from '@nestjs/microservices';

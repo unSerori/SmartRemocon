@@ -2,7 +2,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { DeviceRepo } from './device.repository.js';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { Device } from './generated/prisma/client.js';
-import { DeviceRegisterReqDto } from './device/dto/device.js';
+import { DeviceRegistationReqDto } from './device/dto/deviceRegistation.req.js';
 import { DEVICE_REGISTER } from './device.events.js';
 import { retry } from 'rxjs';
 
@@ -18,7 +18,7 @@ export class DeviceService {
     private readonly eventEmmitter: EventEmitter2,
   ) {}
 
-  async registerDevice(data: DeviceRegisterReqDto): Promise<Device> {
+  async registerDevice(data: DeviceRegistationReqDto): Promise<Device> {
     const name = data.name?.trim() || buildDefaultDeviceName(data.macAddress);
 
     const savedData = await this.deviceRepo.upsertByClientId(

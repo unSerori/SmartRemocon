@@ -1,6 +1,6 @@
 import { Body, Controller, Get, Param, Post, Query } from '@nestjs/common';
 import { AppService } from './app.service.js';
-import { EnvLogResDto } from './env-log/dto/env-log.js';
+import { EnvLogListResDto } from './env-log/dto/env-log.js';
 import { Ctx, EventPattern, MqttContext, Payload, RpcException } from '@nestjs/microservices';
 import { EnvLogRecordReqDto } from './env-log/dto/env-log-record-req.dto.js';
 import {
@@ -54,6 +54,6 @@ export class AppHttpController {
     const limitNum = limit ? Number(limit) : undefined;
     const envLogs = await this.appService.fetchEnvLogs(limitNum); // TODO: 将来的には、srvから得た成果物を、HTTPレスポンスの形としてDTOをかます
 
-    return EnvLogResDto.fromEntities(envLogs);
+    return EnvLogListResDto.fromEntities(envLogs);
   }
 }

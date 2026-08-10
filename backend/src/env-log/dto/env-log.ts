@@ -1,6 +1,6 @@
 import { EnvLog } from '../../generated/prisma/client.js';
 
-export class EnvLogResDto {
+export class EnvLogListResDto {
   constructor(
     public id: number,
     public temperatureSht: number,
@@ -10,8 +10,8 @@ export class EnvLogResDto {
     public createdAt: Date,
   ) {}
 
-  static fromEntity(envLog: EnvLog): EnvLogResDto {
-    return new EnvLogResDto(
+  static fromEntity(envLog: EnvLog): EnvLogListResDto {
+    return new EnvLogListResDto(
       envLog.id,
       envLog.temperatureSht,
       envLog.humidity,
@@ -21,7 +21,7 @@ export class EnvLogResDto {
     );
   }
 
-  static fromEntities(envLogs: EnvLog[]): EnvLogResDto[] {
+  static fromEntities(envLogs: EnvLog[]): EnvLogListResDto[] {
     return envLogs.map((envlog) => this.fromEntity(envlog));
   }
 }

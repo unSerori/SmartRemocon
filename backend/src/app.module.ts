@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller.js';
+import { AppMqttController } from './app-mqtt.controller.js';
 import { AppService } from './app.service.js';
 import { PrismaService } from './prisma.service.js';
 import { EnvLogRepo } from './env-log.repository.js';
@@ -29,7 +29,12 @@ import { DeviceHttpController } from './device-http.controller.js';
       },
     ]),
   ],
-  controllers: [AppController, DeviceHttpController, DeviceMqttController, IrSensorValueController],
+  controllers: [
+    AppMqttController,
+    DeviceHttpController,
+    DeviceMqttController,
+    IrSensorValueController,
+  ],
   providers: [
     AppService,
     PrismaService,

@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { DeviceHttpController } from './device-http.controller.js';
 
-describe('DeviceController', () => {
+describe('DeviceHttpController', () => {
   let controller: DeviceHttpController;
 
   beforeEach(async () => {

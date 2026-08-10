@@ -13,7 +13,7 @@ import { MacAddressRequiredMqttException } from './app/exception/mac-address-req
 
 // Request DTO
 @Controller()
-export class AppController {
+export class AppMqttController {
   constructor(private readonly appService: AppService) {}
 
   @Get()

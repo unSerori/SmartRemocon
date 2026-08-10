@@ -1,17 +1,17 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { AppController } from './app.controller.js';
+import { AppMqttController } from './app-mqtt.controller.js';
 import { AppService } from './app.service.js';
 
-describe('AppController', () => {
-  let appController: AppController;
+describe('AppMqttController', () => {
+  let appController: AppMqttController;
 
   beforeEach(async () => {
     const app: TestingModule = await Test.createTestingModule({
-      controllers: [AppController],
+      controllers: [AppMqttController],
       providers: [AppService],
     }).compile();
 
-    appController = app.get<AppController>(AppController);
+    appController = app.get<AppMqttController>(AppMqttController);
   });
 
   describe('root', () => {

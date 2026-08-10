@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { DeviceMqttController } from './device-mqtt.controller.js';
 
-describe('DeviceController', () => {
+describe('DeviceMqttController', () => {
   let controller: DeviceMqttController;
 
   beforeEach(async () => {

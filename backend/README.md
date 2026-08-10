@@ -200,6 +200,7 @@ SELECT * FROM env_logs;
 SELECT * FROM ir_sensor_values;
 SELECT * FROM devices;
 
+DELETE FROM env_logs;
 DELETE FROM ir_sensor_values;
 DELETE FROM devices;
 

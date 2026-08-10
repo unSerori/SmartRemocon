@@ -35,12 +35,18 @@ std::optional<SendEnvDataUseCase> send_env_data_use_case;
 
 std::optional<MqttSender<DeviceRegisterData>> register_sender;
 
+std::string removeChar(std::string str, char target) {
+  str.erase(std::remove(str.begin(), str.end(), target), str.end());
+  return str;
+}
+
 void setupMqttConnection(){
   String client_id = WiFi.macAddress();
   Serial.printf("client_id: %s\n", client_id.c_str());
   mqtt_connection.emplace("mqtt", HOST, MQTT_PORT, client_id, wifi_connector);
 }
 
+// TODO: 順序
 void setupEnvSending(){ // `mosquitto_sub -h localhost -p 1883 -t "smart_remocon/devices/+/env" -v`
   std::string topic = "smart_remocon/devices/" + std::string(WiFi.macAddress().c_str()) + "/env";
   Serial.printf("topic: %s\n", topic.c_str());
@@ -64,6 +70,7 @@ void setupDeviceRegistering() {
   Serial.printf("Register send: %s.\n", ok ? "success": "failed");
 }
 
+// Ir関連処理をトリガーするための購読登録
 void setupIrSubscriptions() {
   // TODO: 
 }
@@ -86,9 +93,12 @@ void setup() {
     }
     Serial.printf("WiFi connection failed: %d. Retrying...\n", WiFi.status());
   }
+  std::string macAddress(WiFi.macAddress().c_str());
 
   // mDNS初期化
-  while (!MDNS.begin(DEVICE_NAME))
+  std::string macAddressNoColon = removeChar(macAddress, ':');
+  std::string mdnsHostname = "m5go-" + macAddressNoColon;
+  while (!MDNS.begin(mdnsHostname.c_str()))
   {
     Serial.println("Error staring mDNS.");
     delay(1000);

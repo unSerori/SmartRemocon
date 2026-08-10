@@ -26,7 +26,6 @@ export class AppHttpController {
     return this.appService.getTest();
   }
 
-  // HTTPのこれはやめて、
   @Post('devices/:deviceMacAddress/env')
   async createEnvLogHttp(@Param('deviceMacAddress') macAddress: string, @Body() body: PostEnvDTO) {
     console.log(`macAddress: ${macAddress}`);
@@ -40,33 +39,6 @@ export class AppHttpController {
     } catch (error) {
       if (error instanceof DeviceNotFoundError) {
         throw new DeviceNotFoundHttpException(macAddress);
-      }
-
-      throw error;
-    }
-  }
-
-  // こっちに移行（ただしhttpの方もテスト用に残す）
-  @(EventPattern('smart_remocon/devices/+/env') as MethodDecorator) // FIX: 修正待ち
-  async createEnvLog(@Payload() dto: EnvLogReqDto, @Ctx() context: MqttContext) {
-    console.log(`topic: ${context.getTopic()}`);
-    console.log(`env dto.temperatureSht: ${dto.temperatureSht}`);
-    console.log(`env dto.humidity: ${dto.humidity}`);
-    console.log(`env dto.temperatureQmp: ${dto.temperatureQmp}`);
-    console.log(`env dto.pressure: ${dto.pressure}`);
-
-    const macAddress: string | undefined = context.getTopic().split('/')[2];
-    if (!macAddress) {
-      throw new MacAddressRequiredMqttException();
-    }
-
-    try {
-      // service側がcontrollerの都合であるreqDtoを受け取るのは厳密には間違いで、
-      // service層（ユースケース、ビジネスロジック）として必要なものをservice側で定義してそれを受け取るべき
-      await this.appService.recordEnvLog(macAddress, dto); // FIX: dtoの中に必要なものは全部あるが、責務を明瞭にすべきか？
-    } catch (error) {
-      if (error instanceof DeviceNotFoundError) {
-        throw new DeviceNotFoundMqttException(macAddress);
       }
 
       throw error;

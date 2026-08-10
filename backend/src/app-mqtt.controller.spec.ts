@@ -14,9 +14,10 @@ describe('AppMqttController', () => {
     appController = app.get<AppMqttController>(AppMqttController);
   });
 
-  describe('root', () => {
-    it('should return "Hello World!"', () => {
-      expect(appController.getHello()).toBe('Hello World!');
-    });
-  });
+  // TODO: リポ層の呼び出し・wsイベント発火という副作用をモックでテスト
+  // describe('root', () => {
+  //   it('should return "Hello World!"', () => {
+  //     expect(appController.getHello()).toBe('Hello World!');
+  //   });
+  // });
 });

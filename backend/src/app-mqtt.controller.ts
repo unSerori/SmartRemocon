@@ -16,36 +16,6 @@ import { MacAddressRequiredMqttException } from './app/exception/mac-address-req
 export class AppMqttController {
   constructor(private readonly appService: AppService) {}
 
-  @Get()
-  getHello(): string {
-    return this.appService.getHello();
-  }
-
-  @Get('test')
-  getTest(): string {
-    return this.appService.getTest();
-  }
-
-  // HTTPのこれはやめて、
-  @Post('devices/:deviceMacAddress/env')
-  async createEnvLogHttp(@Param('deviceMacAddress') macAddress: string, @Body() body: PostEnvDTO) {
-    console.log(`macAddress: ${macAddress}`);
-    console.log('body.temperatureSht: ', body.temperatureSht);
-
-    try {
-      const savedData = await this.appService.recordEnvLog(macAddress, body);
-      return {
-        data: savedData,
-      };
-    } catch (error) {
-      if (error instanceof DeviceNotFoundError) {
-        throw new DeviceNotFoundHttpException(macAddress);
-      }
-
-      throw error;
-    }
-  }
-
   // こっちに移行（ただしhttpの方もテスト用に残す）
   @(EventPattern('smart_remocon/devices/+/env') as MethodDecorator) // FIX: 修正待ち
   async createEnvLog(@Payload() dto: EnvLogReqDto, @Ctx() context: MqttContext) {
@@ -71,15 +41,5 @@ export class AppMqttController {
 
       throw error;
     }
-  }
-
-  @Get('env-logs')
-  async getEnvLogs(@Query('limit') limit?: string) {
-    console.log('/env-logs controller!');
-
-    const limitNum = limit ? Number(limit) : undefined;
-    const envLogs = await this.appService.fetchEnvLogs(limitNum); // TODO: 将来的には、srvから得た成果物を、HTTPレスポンスの形としてDTOをかます
-
-    return EnvLogResDto.fromEntities(envLogs);
   }
 }

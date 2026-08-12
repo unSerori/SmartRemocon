@@ -2,6 +2,7 @@ import { Body, Controller, Get, Post } from '@nestjs/common';
 import { IrSensorValueCreateReqDto } from './ir-sensor-value-create-req.dto.js';
 import { IrSensorValueService } from './ir-sensor-value.service.js';
 import { IrSensorValue } from './generated/prisma/client.js';
+import { IrSensorValueLearnReqDto } from './ir-sensor-value-learn-req.dto.js';
 
 @Controller()
 export class IrSensorValueHttpController {
@@ -17,5 +18,10 @@ export class IrSensorValueHttpController {
     console.log('here is create in IrSensorValueHttpController.');
 
     return await this.irSensorValueService.registerSensor(dto);
+  }
+
+  @Post('esp/learn')
+  async learn(@Body() body: IrSensorValueLearnReqDto) {
+    await this.irSensorValueService.learnSensorData(body.sensorId);
   }
 }

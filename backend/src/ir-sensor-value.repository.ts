@@ -10,6 +10,10 @@ export type IrSensorValueCreateData = {
   data: string;
 };
 
+type IrSensorValueWIthDevice = Prisma.IrSensorValueGetPayload<{
+  include: { device: true };
+}>;
+
 @Injectable()
 export class IrSensorValueRepo {
   constructor(private prisma: PrismaService) {}
@@ -28,6 +32,13 @@ export class IrSensorValueRepo {
         name: sensor.name,
         data: sensor.data,
       },
+      include: { device: true },
+    });
+  }
+
+  async getBySensorId(sensorId: number): Promise<IrSensorValueWIthDevice> {
+    return await this.prisma.irSensorValue.findUniqueOrThrow({
+      where: { id: sensorId },
       include: { device: true },
     });
   }

@@ -1,9 +1,9 @@
 // ./usecase/SendEnvDataUseCase.h
 
 #pragma once
-#include "sensor/EnvSensor.h"
+#include "sensor/env/EnvSensor.h"
 #include "network/ISender.h"
-#include "sensor/EnvData.h"
+#include "sensor/env/EnvData.h"
 
 class SendEnvDataUseCase
 {

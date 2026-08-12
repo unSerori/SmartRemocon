@@ -1,6 +1,6 @@
 // ./sensor/EnvData.cpp
 
-#include "sensor/EnvData.h"
+#include "sensor/env/EnvData.h"
 
 bool convertToJson(const EnvData& src, JsonVariant dst) {
     dst["temperatureSht"] = src.temperature_sht;

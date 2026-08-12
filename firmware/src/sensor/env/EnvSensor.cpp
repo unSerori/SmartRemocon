@@ -1,8 +1,8 @@
 // ./sensor/EnvSensor.cpp
 
 #include <optional> 
-#include "sensor/EnvData.h"
-#include "sensor/EnvSensor.h"
+#include "sensor/env/EnvData.h"
+#include "sensor/env/EnvSensor.h"
 
 bool EnvSensor::begin()
 {

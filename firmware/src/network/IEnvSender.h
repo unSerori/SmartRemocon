@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include "sensor/EnvData.h"
+#include "sensor/env/EnvSensor.h"
 
 class IEnvSender
 {

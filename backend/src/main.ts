@@ -12,7 +12,12 @@ async function bootstrap() {
     },
   });
 
-  app.useGlobalPipes(new ValidationPipe());
+  app.useGlobalPipes(
+    new ValidationPipe({
+      whitelist: true,
+      transform: true, // バリデーションで@Type()を有効化してネストされたおぶえジェクトにもバリデーションを適用。
+    }),
+  );
 
   await app.startAllMicroservices();
   await app.listen(process.env.PORT ?? 3000); // Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.

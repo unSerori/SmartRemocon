@@ -9,13 +9,13 @@ import { DeviceMqttController } from './device-mqtt.controller.js';
 import { DeviceRepo } from './device.repository.js';
 import { DeviceService } from './device.service.js';
 import { DeviceGateway } from './device.gateway.js';
-import { IrSensorValueRepo } from './ir-sensor-value.repository.js';
-import { IrSensorValueService } from './ir-sensor-value.service.js';
-import { IrSensorValueController } from './ir-sensor-value.controller.js';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { MQTT_SERVICE } from './app.constant.js';
 import { DeviceHttpController } from './device-http.controller.js';
 import { AppHttpController } from './app-http.controller.js';
+import { IrSensorValueHttpController } from './ir-sensor-value-http.controller.js';
+import { IrSensorValueRepo } from './ir-sensor-value.repository.js';
+import { IrSensorValueService } from './ir-sensor-value.service.js';
 
 @Module({
   imports: [
@@ -35,7 +35,7 @@ import { AppHttpController } from './app-http.controller.js';
     AppMqttController,
     DeviceHttpController,
     DeviceMqttController,
-    IrSensorValueController,
+    IrSensorValueHttpController,
   ],
   providers: [
     AppService,

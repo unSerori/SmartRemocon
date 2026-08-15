@@ -39,22 +39,53 @@ model Device {
   createdAt      DateTime @default(now()) @map("created_at") @db.Timestamp(3) // レコード作成日時
   updatedAt      DateTime @updatedAt @map("updated_at")  @db.Timestamp(3) // レコード更新日時
 
-  irSensorValue IrSensorValue[] // 複数の操作値を持つ
+  irSensorValues IrSensorValue[] // 複数の操作値を持つ
   // envLog EnvLog[]
 
   @@map("devices")
 }
 
-model IrSensorValue {
+model IrSensorValue { // TODO: IrSensorEntryに変更
   id Int @id @default(autoincrement()) // センサーデータID（主キー）
   device Device @relation(fields: [deviceId], references: [id])
   deviceId Int // デバイスとの関連
   name String // 信号名（例：TV電源など）
-  data String @db.Text // 赤外線信号データ
+  // data String @db.Text // 赤外線信号データ
   createdAt      DateTime @default(now()) @map("created_at") @db.Timestamp(3) // レコード作成日時
   updatedAt      DateTime @updatedAt @map("updated_at")  @db.Timestamp(3) // レコード更新日時
+
+  knownProtocolData IrSensorValueKnownProtocolData?
+  rawData IrSensorValueRawData?
 
   @@map("ir_sensor_values")
 }
 
+model IrSensorValueKnownProtocolData {
+  id Int @id @default(autoincrement())
+  irSensorValueId Int @unique @map("ir_sensor_value_id")
+  irSensorValue IrSensorValue @relation(fields: [irSensorValueId], references: [id])
 
+  protocol String // プロトコルの種類。
+  frequencyKHz Int @map("frequency_khz") // 赤外線搬送周波数（kHz）
+  headerMarkMicros Int @map("header_mark_micros") // リーダーパルスON
+  headerSpaceMicros Int @map("header_space_micros") // リーダパルスOFF
+  oneMarkMicros Int @map("one_mark_micros") // 1のONパルス幅
+  oneSpaceMicros Int @map("one_space_micros") // 1のOFFパルス幅
+  zeroMarkMicros Int @map("zero_mark_micros") // 0のONパルス幅
+  zeroSpaceMicros Int @map("zero_space_micros") // 0のOFFパルス幅
+  data Json @map("data") // 送信データ（uint64_tのチャンク配列）
+  numberOfBits Int @map("number_of_bits") // ビット数
+
+  @@map("ir_sensor_value_known_protocol_data")
+}
+
+model IrSensorValueRawData {
+  id Int @id @default(autoincrement())
+  irSensorValueId Int @unique @map("ir_sensor_value_id")
+  irSensorValue IrSensorValue @relation(fields: [irSensorValueId], references: [id])
+
+  data Json  // 信号データ（ON, OFF時間の配列）
+  frequencyKHz  Int @map("frequency_khz") // 赤外線搬送周波数（kHz）
+
+  @@map("ir_sensor_value_raw_data")
+}
